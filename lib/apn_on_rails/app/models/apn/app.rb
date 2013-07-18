@@ -47,7 +47,7 @@ class APN::App < APN::Base
       end
       begin
         APN::Connection.open_for_delivery({:cert => the_cert}) do |conn, sock|
-          APN::Device.where(app_id: conditions).limit(1000).each do |dev|
+          APN::Device.where(app_id: conditions).find_in_batches do |dev|
             dev.unsent_notifications.each do |noty|
               conn.write(noty.message_for_sending)
               noty.sent_at = Time.now

@@ -2,7 +2,7 @@ class CreateApnApps < ActiveRecord::Migration # :nodoc:
 
   module APN # :nodoc:
     class Device < ActiveRecord::Base # :nodoc:
-      set_table_name 'apn_devices'
+      self.table_name = "apn_devices"
     end
   end
 

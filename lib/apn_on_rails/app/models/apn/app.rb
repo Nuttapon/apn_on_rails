@@ -7,6 +7,7 @@ class APN::App < APN::Base
   has_many :group_notifications, :through => :groups
   has_many :unsent_group_notifications, :through => :groups
 
+
   def cert
     (RAILS_ENV == 'production' ? apn_prod_cert : apn_dev_cert)
   end
@@ -46,7 +47,7 @@ class APN::App < APN::Base
       end
       begin
         APN::Connection.open_for_delivery({:cert => the_cert}) do |conn, sock|
-          APN::Device.where(app_id: conditions).find_in_batches do |dev|
+          APN::Device.where(app_id: conditions).limit(1000).each do |dev|
             dev.unsent_notifications.each do |noty|
               conn.write(noty.message_for_sending)
               noty.sent_at = Time.now

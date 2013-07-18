@@ -2,7 +2,7 @@ class AlterApnNotifications < ActiveRecord::Migration # :nodoc:
   
   module APN # :nodoc:
     class Notification < ActiveRecord::Base # :nodoc:
-      set_table_name 'apn_notifications'
+      self.table_name = "apn_notifications"
     end
   end
   

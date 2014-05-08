@@ -9,7 +9,7 @@ class Apn::App < Apn::Base
 
 
   def cert
-    (RAILS_ENV == 'production' ? Apn_prod_cert : Apn_dev_cert)
+    (Rails.env == 'production' ? apn_prod_cert : apn_dev_cert)
   end
 
   # Opens a connection to the Apple Apn server and attempts to batch deliver

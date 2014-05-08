@@ -1,5 +1,5 @@
-class APN::PullNotification < APN::Base
-  belongs_to :app, :class_name => 'APN::App'
+class Apn::PullNotification < Apn::Base
+  belongs_to :app, :class_name => 'Apn::App'
   
   validates_presence_of :app_id
 

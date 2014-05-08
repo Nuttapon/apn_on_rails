@@ -1,6 +1,6 @@
 class AlterApnDevices < ActiveRecord::Migration # :nodoc:
   
-  module APN # :nodoc:
+  module Apn # :nodoc:
     class Device < ActiveRecord::Base # :nodoc:
       self.table_name = "apn_devices"
     end
@@ -9,7 +9,7 @@ class AlterApnDevices < ActiveRecord::Migration # :nodoc:
   def self.up
     add_column :apn_devices, :last_registered_at, :datetime
     
-    APN::Device.all.each do |device|
+    Apn::Device.all.each do |device|
       device.last_registered_at = device.created_at
       device.save!
     end

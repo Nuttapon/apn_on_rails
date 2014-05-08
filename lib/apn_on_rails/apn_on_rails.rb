@@ -32,7 +32,7 @@ else
   configatron.apn.feedback.set_default(:cert, configatron.apn.cert)
 end
 
-module APN # :nodoc:
+module Apn # :nodoc:
 
   module Errors # :nodoc:
 

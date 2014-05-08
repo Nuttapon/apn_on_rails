@@ -1,6 +1,6 @@
 class AlterApnNotifications < ActiveRecord::Migration # :nodoc:
   
-  module APN # :nodoc:
+  module Apn # :nodoc:
     class Notification < ActiveRecord::Base # :nodoc:
       set_table_name 'apn_notifications'
     end

@@ -4,7 +4,7 @@ namespace :apn do
     
     desc "Deliver all unsent APN notifications."
     task :deliver => [:environment] do
-      APN::App.send_notifications
+      Apn::App.send_notifications
     end
 
   end # notifications
@@ -13,7 +13,7 @@ namespace :apn do
     
     desc "Deliver all unsent APN Group notifications."
     task :deliver => [:environment] do
-      APN::App.send_group_notifications
+      Apn::App.send_group_notifications
     end
     
   end # group_notifications
@@ -22,7 +22,7 @@ namespace :apn do
     
     desc "Process all devices that have feedback from APN."
     task :process => [:environment] do
-      APN::App.process_devices
+      Apn::App.process_devices
     end
     
   end

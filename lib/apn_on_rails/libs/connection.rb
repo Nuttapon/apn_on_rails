@@ -1,4 +1,4 @@
-module APN
+module Apn
   module Connection
     
     class << self
@@ -7,7 +7,7 @@ module APN
       # The connections are close automatically.
       # 
       #  Example:
-      #   APN::Configuration.open_for_delivery do |conn|
+      #   Apn::Configuration.open_for_delivery do |conn|
       #     conn.write('my cool notification')
       #   end
       # 
@@ -67,4 +67,4 @@ module APN
     end
     
   end # Connection
-end # APN
+end # Apn

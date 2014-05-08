@@ -1,6 +1,6 @@
 if defined?(::Rails::Railtie) # backwards compatible
 
-module APN
+module Apn
   module Rails
     
     class Railtie < ::Rails::Railtie

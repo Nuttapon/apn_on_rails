@@ -1,26 +1,26 @@
 # Represents the message you wish to send. 
-# An APN::Notification belongs to an APN::Device.
+# An Apn::Notification belongs to an Apn::Device.
 # 
 # Example:
-#   apn = APN::Notification.new
-#   apn.badge = 5
-#   apn.sound = 'my_sound.aiff'
-#   apn.alert = 'Hello!'
-#   apn.device = APN::Device.find(1)
-#   apn.save
+#   Apn = Apn::Notification.new
+#   Apn.badge = 5
+#   Apn.sound = 'my_sound.aiff'
+#   Apn.alert = 'Hello!'
+#   Apn.device = Apn::Device.find(1)
+#   Apn.save
 # 
 # To deliver call the following method:
-#   APN::Notification.send_notifications
+#   Apn::Notification.send_notifications
 # 
-# As each APN::Notification is sent the <tt>sent_at</tt> column will be timestamped,
+# As each Apn::Notification is sent the <tt>sent_at</tt> column will be timestamped,
 # so as to not be sent again.
-class APN::Notification < APN::Base
+class Apn::Notification < Apn::Base
   include ::ActionView::Helpers::TextHelper
   extend ::ActionView::Helpers::TextHelper
   serialize :custom_properties
   
-  belongs_to :device, :class_name => 'APN::Device'
-  has_one    :app,    :class_name => 'APN::App', :through => :device
+  belongs_to :device, :class_name => 'Apn::Device'
+  has_one    :app,    :class_name => 'Apn::App', :through => :device
   
   # Stores the text alert message you want to send to the device.
   # 
@@ -33,21 +33,21 @@ class APN::Notification < APN::Base
     write_attribute('alert', message)
   end
   
-  # Creates a Hash that will be the payload of an APN.
+  # Creates a Hash that will be the payload of an Apn.
   # 
   # Example:
-  #   apn = APN::Notification.new
-  #   apn.badge = 5
-  #   apn.sound = 'my_sound.aiff'
-  #   apn.alert = 'Hello!'
-  #   apn.apple_hash # => {"aps" => {"badge" => 5, "sound" => "my_sound.aiff", "alert" => "Hello!"}}
+  #   Apn = Apn::Notification.new
+  #   Apn.badge = 5
+  #   Apn.sound = 'my_sound.aiff'
+  #   Apn.alert = 'Hello!'
+  #   Apn.apple_hash # => {"aps" => {"badge" => 5, "sound" => "my_sound.aiff", "alert" => "Hello!"}}
   #
   # Example 2: 
-  #   apn = APN::Notification.new
-  #   apn.badge = 0
-  #   apn.sound = true
-  #   apn.custom_properties = {"typ" => 1}
-  #   apn.apple_hash # => {"aps" => {"badge" => 0, "sound" => "1.aiff"}, "typ" => "1"}
+  #   Apn = Apn::Notification.new
+  #   Apn.badge = 0
+  #   Apn.sound = true
+  #   Apn.custom_properties = {"typ" => 1}
+  #   Apn.apple_hash # => {"aps" => {"badge" => 0, "sound" => "1.aiff"}, "typ" => "1"}
   def apple_hash
     result = {}
     result['aps'] = {}
@@ -65,14 +65,14 @@ class APN::Notification < APN::Base
     result
   end
   
-  # Creates the JSON string required for an APN message.
+  # Creates the JSON string required for an Apn message.
   # 
   # Example:
-  #   apn = APN::Notification.new
-  #   apn.badge = 5
-  #   apn.sound = 'my_sound.aiff'
-  #   apn.alert = 'Hello!'
-  #   apn.to_apple_json # => '{"aps":{"badge":5,"sound":"my_sound.aiff","alert":"Hello!"}}'
+  #   Apn = Apn::Notification.new
+  #   Apn.badge = 5
+  #   Apn.sound = 'my_sound.aiff'
+  #   Apn.alert = 'Hello!'
+  #   Apn.to_apple_json # => '{"aps":{"badge":5,"sound":"my_sound.aiff","alert":"Hello!"}}'
   def to_apple_json
     self.apple_hash.to_json
   end
@@ -82,13 +82,13 @@ class APN::Notification < APN::Base
     json = self.to_apple_json
     device_token = [self.device.token.gsub(/[<\s>]/, '')].pack('H*')
     message = [0, 0, 32, device_token, 0, json.bytes.count, json].pack('ccca*cca*')
-    raise APN::Errors::ExceededMessageSizeError.new(json) if json.bytes.count > 256
+    raise Apn::Errors::ExceededMessageSizeError.new(json) if json.bytes.count > 256
     message
   end
   
   def self.send_notifications
-    ActiveSupport::Deprecation.warn("The method APN::Notification.send_notifications is deprecated.  Use APN::App.send_notifications instead.")
-    APN::App.send_notifications
+    ActiveSupport::Deprecation.warn("The method Apn::Notification.send_notifications is deprecated.  Use Apn::App.send_notifications instead.")
+    Apn::App.send_notifications
   end
   
-end # APN::Notification
+end # Apn::Notification

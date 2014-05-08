@@ -1,10 +1,10 @@
-class APN::GroupNotification < APN::Base
+class Apn::GroupNotification < Apn::Base
   include ::ActionView::Helpers::TextHelper
   extend ::ActionView::Helpers::TextHelper
   serialize :custom_properties
   
-  belongs_to :group, :class_name => 'APN::Group'
-  has_one    :app, :class_name => 'APN::App', :through => :group
+  belongs_to :group, :class_name => 'Apn::Group'
+  has_one    :app, :class_name => 'Apn::App', :through => :group
   has_many   :device_groupings, :through => :group
   
   validates_presence_of :group_id
@@ -24,21 +24,21 @@ class APN::GroupNotification < APN::Base
     write_attribute('alert', message)
   end
   
-  # Creates a Hash that will be the payload of an APN.
+  # Creates a Hash that will be the payload of an Apn.
   # 
   # Example:
-  #   apn = APN::GroupNotification.new
-  #   apn.badge = 5
-  #   apn.sound = 'my_sound.aiff'
-  #   apn.alert = 'Hello!'
-  #   apn.apple_hash # => {"aps" => {"badge" => 5, "sound" => "my_sound.aiff", "alert" => "Hello!"}}
+  #   Apn = Apn::GroupNotification.new
+  #   Apn.badge = 5
+  #   Apn.sound = 'my_sound.aiff'
+  #   Apn.alert = 'Hello!'
+  #   Apn.apple_hash # => {"aps" => {"badge" => 5, "sound" => "my_sound.aiff", "alert" => "Hello!"}}
   #
   # Example 2: 
-  #   apn = APN::GroupNotification.new
-  #   apn.badge = 0
-  #   apn.sound = true
-  #   apn.custom_properties = {"typ" => 1}
-  #   apn.apple_hash # => {"aps" => {"badge" => 0, "sound" => 1.aiff},"typ" => "1"}
+  #   Apn = Apn::GroupNotification.new
+  #   Apn.badge = 0
+  #   Apn.sound = true
+  #   Apn.custom_properties = {"typ" => 1}
+  #   Apn.apple_hash # => {"aps" => {"badge" => 0, "sound" => 1.aiff},"typ" => "1"}
   def apple_hash
     result = {}
     result['aps'] = {}
@@ -56,14 +56,14 @@ class APN::GroupNotification < APN::Base
     result
   end
   
-  # Creates the JSON string required for an APN message.
+  # Creates the JSON string required for an Apn message.
   # 
   # Example:
-  #   apn = APN::Notification.new
-  #   apn.badge = 5
-  #   apn.sound = 'my_sound.aiff'
-  #   apn.alert = 'Hello!'
-  #   apn.to_apple_json # => '{"aps":{"badge":5,"sound":"my_sound.aiff","alert":"Hello!"}}'
+  #   Apn = Apn::Notification.new
+  #   Apn.badge = 5
+  #   Apn.sound = 'my_sound.aiff'
+  #   Apn.alert = 'Hello!'
+  #   Apn.to_apple_json # => '{"aps":{"badge":5,"sound":"my_sound.aiff","alert":"Hello!"}}'
   def to_apple_json
     self.apple_hash.to_json
   end
@@ -71,9 +71,10 @@ class APN::GroupNotification < APN::Base
   # Creates the binary message needed to send to Apple.
   def message_for_sending(device)
     json = self.to_apple_json
-    message = "\0\0 #{device.to_hexa}\0#{json.length.chr}#{json}"
-    raise APN::Errors::ExceededMessageSizeError.new(message) if message.size.to_i > 256
+    device_token = [self.device.token.gsub(/[<\s>]/, '')].pack('H*')
+    message = [0, 0, 32, device_token, 0, json.bytes.count, json].pack('ccca*cca*')
+    raise APN::Errors::ExceededMessageSizeError.new(json) if json.bytes.count > 256
     message
   end
   
-end # APN::Notification
+end # Apn::Notification

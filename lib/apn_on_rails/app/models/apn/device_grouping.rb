@@ -1,7 +1,7 @@
-class APN::DeviceGrouping < APN::Base
+class Apn::DeviceGrouping < Apn::Base
   
-  belongs_to :group, :class_name => 'APN::Group'
-  belongs_to :device, :class_name => 'APN::Device'
+  belongs_to :group, :class_name => 'Apn::Group'
+  belongs_to :device, :class_name => 'Apn::Device'
   
   validates_presence_of :device_id, :group_id
   validate :same_app_id

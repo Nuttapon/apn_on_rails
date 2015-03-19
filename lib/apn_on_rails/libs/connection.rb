@@ -42,6 +42,7 @@ module Apn
       end
       
       private
+      
       def open(options = {}, &block) # :nodoc:
         options = {:cert => configatron.apn.cert,
                    :passphrase => configatron.apn.passphrase,

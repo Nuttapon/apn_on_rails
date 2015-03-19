@@ -17,6 +17,9 @@
 class Apn::Notification < Apn::Base
   include ::ActionView::Helpers::TextHelper
   extend ::ActionView::Helpers::TextHelper
+
+  attr_accessor :content_available
+
   serialize :custom_properties
   
   belongs_to :device, :class_name => 'Apn::Device'
@@ -53,6 +56,7 @@ class Apn::Notification < Apn::Base
     result['aps'] = {}
     result['aps']['alert'] = self.alert if self.alert
     result['aps']['badge'] = self.badge.to_i if self.badge
+    result['aps']['content-available'] = 1 if self.content_available
     if self.sound
       result['aps']['sound'] = self.sound if self.sound.is_a? String
       result['aps']['sound'] = "1.aiff" if self.sound.is_a?(TrueClass)
